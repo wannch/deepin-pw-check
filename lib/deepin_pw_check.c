@@ -132,7 +132,10 @@ retry:
     options->palindrome_min_num = iniparser_getint(dic, "Password:PALINDROME_NUM", 0);
     options->check_word = iniparser_getint(dic, "Password:WORD_CHECK", 0);
     dict_buff = iniparser_getstring(dic, "Password:DICT_PATH", "");
-    strcpy(options->dict_path, dict_buff);
+    // strcpy(options->dict_path, dict_buff);
+    strncpy(options->dict_path, dict_buff, sizeof(options->dict_path));
+    options->dict_path[sizeof(options->dict_path) - 1] = '\0';
+
     options->monotone_character_num = iniparser_getint(dic, "Password:MONOTONE_CHARACTER_NUM", 0);
     options->consecutive_same_character_num =
             iniparser_getint(dic, "Password:CONSECUTIVE_SAME_CHARACTER_NUM", 0);
@@ -159,7 +162,9 @@ static struct Options *get_default_options(int level, const char *dict_path, con
         if (strcmp(options->dict_path, "") == 0) {
             options->dict_path[0] = '\0';
         } else {
-            strcpy(options->dict_path, dict_path);
+            // strcpy(options->dict_path, dict_path);
+            strncpy(options->dict_path, dict_path, sizeof(options->dict_path));
+            options->dict_path[sizeof(options->dict_path) - 1] = '\0';
         }
     }
 
@@ -240,7 +245,7 @@ bool include_chinese(const char *data) {
         if (c == 0) {
             break;
         }
-        //如果字符高位为1且下一字符高位也是1则有中文字符
+        //如果字符高位�?1且下一字符高位也是1则有中文字符
         if (c & 0x80 && *data & 0x80) {
             return true;
         }
@@ -275,7 +280,7 @@ PW_ERROR_TYPE is_type_valid(const char *pw, char *character_type, int character_
     while (p != NULL) {
         char *next_data_addr = NULL;
 
-        // 如果当前字符是特殊字符，并且下个 ; 之后的内容也是特殊字符, 则他们作为一组判断
+        // 如果当前字符是特殊字符，并且下个 ; 之后的内容也是特殊字�?, 则他们作为一组判�?
         if ((*p >= 33 && *p <= 47) || (*p >= 58 && *p <= 64) || (*p >= 91 && *p <= 96) ||
             (*p >= 123 && *p <= 126)) {
 
